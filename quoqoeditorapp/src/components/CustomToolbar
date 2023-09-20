@@ -1,0 +1,32 @@
+import React from 'react';
+
+const CustomToolbar = () => {
+  // Define your custom toolbar options here
+  const customOptions = [
+    { label: 'Bold', value: 'bold' },
+    { label: 'Italic', value: 'italic' },
+    { label: 'Underline', value: 'underline' },
+  ];
+
+  // Function to handle the toolbar button clicks
+  const handleToolbarClick = (value) => {
+    // Use the Quill instance to apply formatting to the selected text
+    const quill = window.quillRef.getEditor();
+    quill.format(value, true);
+  };
+
+  return (
+    <div className="custom-toolbar">
+      {customOptions.map((option) => (
+        <button
+          key={option.value}
+          onClick={() => handleToolbarClick(option.value)}
+        >
+          {option.label}
+        </button>
+      ))}
+    </div>
+  );
+};
+
+export default CustomToolbar;

@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "docxtemplater": "^3.39.0",
+    "pdf-lib": "^1.17.1"
+  }
+}
