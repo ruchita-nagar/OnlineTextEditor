@@ -1,12 +1,11 @@
 import json
 from django.http import HttpResponse, JsonResponse
-import docx2txt
 from docx import Document
 from docx.shared import Pt
 import re
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
-import pdfkit
-
+from pyhtml2pdf import converter
+from xhtml2pdf import pisa 
 
 
 def extract_hyperlinks(run):
@@ -41,13 +40,13 @@ def generate_docx_from_html_content(request):
         paragraph = doc.add_paragraph()
 
         if 'inlineStyleRanges' in block and block['inlineStyleRanges']:
-            for inline_style in block['inlineStyleRanges']:
-                offset = inline_style['offset']
-                length = inline_style['length']
+            inlineStyleRanges = block['inlineStyleRanges']
+            offset = inlineStyleRanges[0]['offset']
+            length = inlineStyleRanges[0]['length']
+            run = paragraph.add_run(text[offset:offset + length])
+            for inline_style in inlineStyleRanges:
                 style = inline_style['style']
-                run = paragraph.add_run(text[offset:offset + length])
                 apply_format(run, style)
-
             remaining_text = text[length:]
             if remaining_text:
                 run = paragraph.add_run(remaining_text)
@@ -69,31 +68,18 @@ def generate_docx_from_html_content(request):
 def generate_pdf_from_html_content(request):
     data = json.loads(request.body.decode('utf-8'))
     html_content = data.get("content")
-    doc = Document()
+    print(html_content)
+    result_file = open("EditedPdfFile.pdf", "w+b")
 
-    for block in html_content['blocks']:
-        text = block['text']
-        paragraph = doc.add_paragraph()
+    # convert HTML to PDF
+    pisa_status = pisa.CreatePDF(
+            html_content,                # the HTML to convert
+            dest=result_file)           # file handle to recieve result
 
-        if 'inlineStyleRanges' in block and block['inlineStyleRanges']:
-            for inline_style in block['inlineStyleRanges']:
-                offset = inline_style['offset']
-                length = inline_style['length']
-                style = inline_style['style']
-                run = paragraph.add_run(text[offset:offset + length])
-                apply_format(run, style)
-
-            remaining_text = text[length:]
-            if remaining_text:
-                run = paragraph.add_run(remaining_text)
-        else:
-            run = paragraph.add_run(text)
-
-    for paragraph in doc.paragraphs:
-        paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
-
-    doc.save('EditedPdfFile.pdf')
-
+    # close output file
+    result_file.close()     
+    # Generate the PDF and save it to a file
+    
     with open('EditedPdfFile.pdf', 'rb') as pdf_file:
         response = HttpResponse(pdf_file.read(), content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename=EditedPdfFile.pdf'
