@@ -62,10 +62,9 @@ function WordEditor() {
   }
 
   const downloadPdfFile = async () => {
-    const content = convertToRaw(editorState.getCurrentContent());
     try {
       const response = await axios.post('http://127.0.0.1:8000/parse-to-pdf', {
-        content: content
+        content: htmlContent
       }
         , {
           responseType: 'blob',
