@@ -5,7 +5,7 @@
     font-weight: bold;
     width: 200px;
   }
-  
+
   .editor-container {
     margin-top: 1%;
     height: 500px;
@@ -14,7 +14,7 @@
     overflow: hidden;
   }
 
-  .ql-snow *{
+  .ql-snow * {
     background-color: #fff;
   }
 
@@ -28,7 +28,38 @@
     overflow-y: auto;
   }
 
-  .bglight{
+  .bglight {
     background-size: cover;
     background: url('https://media.istockphoto.com/id/1303342139/vector/empty-gray-studio-room-used-as-background-for-display-your-products.jpg?s=612x612&w=0&k=20&c=UmfT29o50ERd21MsjVy7hB4Fa31-XRC4KOEo_FaX6AM=');
+  }
+
+
+  .App {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+
+  .editor-container {
+    width: 100%;
+    max-width: 600px;
+  }
+
+  .mini-toolbar {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    z-index: 200;
+    background-color: #00000040;
+  }
+
+
+  .mini-toolbar button {
+    width: 30px;
+    height: 30px;
+    padding: 0px;
+    border: 0;
+    border-radius: 2px;
+    margin: 5px;
   }
